@@ -155,12 +155,12 @@ public class SudokuSolverParallel {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (getCell(row, col) == 0) {
-                    int candidates = 0;
+                    int possibleValues = 0;
                     for (int num = 1; num <= 9; num++) {
                         if (isValid(row, col, num))
-                            candidates++;
+                            possibleValues++;
                     }
-                    possibleValuesLeftToCompute = possibleValuesLeftToCompute.multiply(BigInteger.valueOf(candidates));
+                    possibleValuesLeftToCompute = possibleValuesLeftToCompute.multiply(BigInteger.valueOf(possibleValues));
                 }
             }
         }
