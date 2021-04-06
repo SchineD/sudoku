@@ -43,9 +43,9 @@ public class SudokuSolver {
             }
             SudokuSolverParallel solver = new SudokuSolverParallel(board_helper);
 
-            System.out.println("");
+            System.out.println();
             board.printBoard(board_helper);
-            System.out.println("");
+            System.out.println();
 
             startTime = System.currentTimeMillis();
 
@@ -73,9 +73,9 @@ public class SudokuSolver {
             } else {
                 board_helper = board.getBoard();
             }
-            System.out.println("");
+            System.out.println();
             solver.printBoard(board_helper);
-            System.out.println("");
+            System.out.println();
 
             startTime = System.currentTimeMillis();
 
@@ -84,9 +84,9 @@ public class SudokuSolver {
             computationTime += System.currentTimeMillis() - startTime;
 
             System.out.println(computationTime);
-            System.out.println("");
+            System.out.println();
             solver.printBoard(board_helper);
-            System.out.println("");
+            System.out.println();
         }
 
         return computationTime;

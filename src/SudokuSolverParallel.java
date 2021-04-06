@@ -121,7 +121,7 @@ public class SudokuSolverParallel {
 
         @Override
         protected Integer compute() {
-            // if the search space is smaller than the cutoff, solve sequentially
+
             if (board.getSearchSpace().compareTo(TRESHOLD) < 0)
                 return board.solve(row, col);
             else
@@ -142,16 +142,16 @@ public class SudokuSolverParallel {
 
             // try all possible numbers
             List<ParallelTask> tasks = new ArrayList<>();
-            for (int num = 1; num <= BOARD_SIZE; num++) {
-                if (board.isValid(row, col, num)) {
-                    board.setCell(row, col, num);
+            for (int value = 1; value <= BOARD_SIZE; value++) {
+                if (board.isValid(row, col, value)) {
+                    board.setCell(row, col, value);
                     tasks.add(row < BOARD_SIZE - 1 ? new ParallelTask(row + 1, col, new SudokuSolverParallel(board)) : new ParallelTask(0, col + 1, new SudokuSolverParallel(board)));
                     board.setCell(row, col, 0);
                 }
             }
             board = null;
 
-            int res = 0;
+            int result = 0;
 
             ParallelTask endresultTask = tasks.get(tasks.size() - 1);
             tasks.remove(tasks.size() - 1);
@@ -159,12 +159,12 @@ public class SudokuSolverParallel {
             for (ParallelTask task : tasks)
                 task.fork();
 
-            res += endresultTask.compute();
+            result += endresultTask.compute();
 
             for (ParallelTask task : tasks)
-                res += task.join();
+                result += task.join();
 
-            return res;
+            return result;
         }
     }
 
