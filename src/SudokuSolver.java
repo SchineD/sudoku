@@ -11,17 +11,23 @@ public class SudokuSolver {
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 9;
 
-    private static final int ROUNDS = 100;
+    private static final int ROUNDS = 50;
 
 
     public static void main(String[] args) {
 
-    runParallelSolver();
+    long computationTimeParallel = runParallelSolver();
 
-    runSeqSolver();
+    long computationTimeSequential = runSeqSolver();
+
+        System.out.println("-------------PARALLEL-------------");
+        System.out.println("Sudoku solved in ~" + (float)computationTimeParallel/(float)ROUNDS + "ms.");
+
+        System.out.println("------------SEQUENTIAL--------------");
+        System.out.println("Sudoku solved in ~" + (float)computationTimeSequential/(float)ROUNDS + "ms.");
     }
 
-    private static void runParallelSolver() {
+    private static long runParallelSolver() {
 
         long startTime;
         long computationTime = 0;
@@ -29,38 +35,61 @@ public class SudokuSolver {
         for(int i = 0; i < ROUNDS; i++) {
 
             Board board = new Board();
-            int[][] board_helper = board.getBoard();
+            int[][] board_helper;
+            if(i % 2 == 0) {
+                board_helper = board.getBoard2();
+            } else {
+                board_helper = board.getBoard();
+            }
             SudokuSolverParallel solver = new SudokuSolverParallel(board_helper);
 
+            System.out.println("");
+            board.printBoard(board_helper);
+            System.out.println("");
+
             startTime = System.currentTimeMillis();
+
             solver.parallelSolve();
+
             computationTime += System.currentTimeMillis() - startTime;
+
             System.out.println(computationTime);
         }
 
-        System.out.println("-------------PARALLEL-------------");
-        System.out.println("Sudoku solved in ~" + (float)computationTime/ROUNDS + "ms.");
+        return computationTime;
+
     }
 
-    private static void runSeqSolver() {
+    private static long runSeqSolver() {
         long startTime;
         long computationTime = 0;
 
         for(int i = 0; i < ROUNDS; i++) {
             SudokuSolver solver = new SudokuSolver();
             Board board = new Board();
-            int[][] board_helper = board.getBoard();
+            int[][] board_helper;
+            if(i % 2 == 0) {
+                board_helper = board.getBoard2();
+            } else {
+                board_helper = board.getBoard();
+            }
+            System.out.println("");
+            solver.printBoard(board_helper);
+            System.out.println("");
 
             startTime = System.currentTimeMillis();
+
             solver.solve(board_helper);
+
             computationTime += System.currentTimeMillis() - startTime;
+
             System.out.println(computationTime);
+            System.out.println("");
+            solver.printBoard(board_helper);
+            System.out.println("");
         }
 
-        //solver.printBoard();
-
-        System.out.println("------------SEQUENTIAL--------------");
-        System.out.println("Sudoku solved in ~" + (float)computationTime/ROUNDS + "ms.");
+        return computationTime;
     }
 
     private void printBoard(int[][] board) {

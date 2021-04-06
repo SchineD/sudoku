@@ -10,6 +10,7 @@ import java.util.concurrent.RecursiveTask;
 public class SudokuSolverParallel {
 
     public final static int BOARD_SIZE = 9;
+    private static final int START_INDEX = 0;
 
     private final static BigInteger CUTOFF_SEARCHSPACE = new BigDecimal("1E25").toBigInteger();
 
@@ -37,7 +38,7 @@ public class SudokuSolverParallel {
 
         if (col == BOARD_SIZE) {
 
-            // Board.printBoard(board);
+            printBoard(board);
             return 1;
         }
 
@@ -201,6 +202,15 @@ public class SudokuSolverParallel {
                 res += task.join();
 
             return res;
+        }
+    }
+
+    public void printBoard(int[][] board) {
+        for (int row = START_INDEX; row < BOARD_SIZE; row++) {
+            for (int column = START_INDEX; column < BOARD_SIZE; column++) {
+                System.out.print(board[row][column] + " ");
+            }
+            System.out.println();
         }
     }
 
