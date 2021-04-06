@@ -49,62 +49,6 @@ public class SudokuSolverParallel {
         return res;
     }
 
-    public int parallelSolve() {
-        return pool.invoke(new ParallelTask(this));
-    }
-
-    private boolean isValid(int row, int col, int value) {
-        // check for equals numbers on the column and the row
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            if (getCell(row, i) == value || getCell(i, col) == value)
-                return false;
-        }
-
-        int rowSec = (row / 3) * 3;
-        int colSec = (col / 3) * 3;
-
-        int row1 = (row + 2) % 3;
-        int row2 = (row + 4) % 3;
-        int col1 = (col + 2) % 3;
-        int col2 = (col + 4) % 3;
-
-        if (getCell(row1 + rowSec, col1 + colSec) == value) return false;
-        if (getCell(row2 + rowSec, col1 + colSec) == value) return false;
-        if (getCell(row1 + rowSec, col2 + colSec) == value) return false;
-        if (getCell(row2 + rowSec, col2 + colSec) == value) return false;
-
-        return true;
-    }
-    
-    public int getCell(int row, int col) {
-        return board[row][col];
-    }
-    
-    public void setCell(int row, int col, int value) {
-        board[row][col] = value;
-    }
-    
-    public boolean isEmpty(int row, int col) {
-        return getCell(row, col) == 0;
-    }
-
-    public BigInteger getSearchSpace() {
-        BigInteger possibleValuesLeftToCompute = BigInteger.valueOf(1);
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (getCell(row, col) == 0) {
-                    int candidates = 0;
-                    for (int num = 1; num <= 9; num++) {
-                        if (isValid(row, col, num))
-                            candidates++;
-                    }
-                    possibleValuesLeftToCompute = possibleValuesLeftToCompute.multiply(BigInteger.valueOf(candidates));
-                }
-            }
-        }
-        return possibleValuesLeftToCompute;
-    }
-
     private class ParallelTask extends RecursiveTask<Integer> {
         private SudokuSolverParallel board;
         private int row, col;
@@ -127,7 +71,7 @@ public class SudokuSolverParallel {
             else
                 return parallelSolve();
         }
-        
+
         private int parallelSolve() {
 
             // done!
@@ -166,6 +110,61 @@ public class SudokuSolverParallel {
 
             return result;
         }
+    }
+
+    public int parallelSolve() {
+        return pool.invoke(new ParallelTask(this));
+    }
+
+    private boolean isValid(int row, int col, int value) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            if (getCell(row, i) == value || getCell(i, col) == value)
+                return false;
+        }
+
+        int row_subSection = (row / 3) * 3;
+        int col_subSection = (col / 3) * 3;
+
+        int row1 = (row + 2) % 3;
+        int row2 = (row + 4) % 3;
+        int col1 = (col + 2) % 3;
+        int col2 = (col + 4) % 3;
+
+        if (getCell(row1 + row_subSection, col1 + col_subSection) == value) return false;
+        if (getCell(row2 + row_subSection, col1 + col_subSection) == value) return false;
+        if (getCell(row1 + row_subSection, col2 + col_subSection) == value) return false;
+        if (getCell(row2 + row_subSection, col2 + col_subSection) == value) return false;
+
+        return true;
+    }
+    
+    public int getCell(int row, int col) {
+        return board[row][col];
+    }
+    
+    public void setCell(int row, int col, int value) {
+        board[row][col] = value;
+    }
+    
+    public boolean isEmpty(int row, int col) {
+        return getCell(row, col) == 0;
+    }
+
+    public BigInteger getSearchSpace() {
+        BigInteger possibleValuesLeftToCompute = BigInteger.valueOf(1);
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (getCell(row, col) == 0) {
+                    int candidates = 0;
+                    for (int num = 1; num <= 9; num++) {
+                        if (isValid(row, col, num))
+                            candidates++;
+                    }
+                    possibleValuesLeftToCompute = possibleValuesLeftToCompute.multiply(BigInteger.valueOf(candidates));
+                }
+            }
+        }
+        return possibleValuesLeftToCompute;
     }
 
     public void printBoard(int[][] board) {

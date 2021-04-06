@@ -21,10 +21,10 @@ public class SudokuSolver {
     long computationTimeSequential = runSeqSolver();
 
         System.out.println("-------------PARALLEL-------------");
-        System.out.println("Sudoku solved in ~" + (float)computationTimeParallel/(float)ROUNDS + "ms.");
+        System.out.println("Sudoku solved in ~" + (float)computationTimeParallel/(float)ROUNDS + "ms. (avg)");
 
         System.out.println("------------SEQUENTIAL--------------");
-        System.out.println("Sudoku solved in ~" + (float)computationTimeSequential/(float)ROUNDS + "ms.");
+        System.out.println("Sudoku solved in ~" + (float)computationTimeSequential/(float)ROUNDS + "ms. (avg)");
     }
 
     private static long runParallelSolver() {
