@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ca82add6-d868-45ae-93c9-881b22d172d5" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1qld0zRt4UH2j9yXSet8WyxcB7H" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+  </component>
+  <component name="RunManager" selected="Application.SudokuSolver">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="sudoko_solver" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SudokuSolver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="SudokuSolver" />
+      <module name="sudoko_solver" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.SudokuSolver" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SudokuSolver" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ca82add6-d868-45ae-93c9-881b22d172d5" name="Default Changelist" comment="" />
+      <created>1617657891481</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1617657891481</updated>
+      <workItem from="1617657897588" duration="13537000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1467" y="83" key="#com.intellij.ide.util.MemberChooser" timestamp="1617699487163">
+      <screen x="-2560" y="-353" width="2560" height="1440" />
+    </state>
+    <state x="-1467" y="83" key="#com.intellij.ide.util.MemberChooser/-2560.-353.2560.1440/0.0.1280.800/-5120.-353.2560.1440@-2560.-353.2560.1440" timestamp="1617699487163" />
+    <state width="2518" height="423" key="GridCell.Tab.0.bottom" timestamp="1617708137369">
+      <screen x="-2560" y="-353" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="423" key="GridCell.Tab.0.bottom/-2560.-353.2560.1440/0.0.1280.800/-5120.-353.2560.1440@-2560.-353.2560.1440" timestamp="1617708137369" />
+    <state width="2518" height="423" key="GridCell.Tab.0.center" timestamp="1617708137364">
+      <screen x="-2560" y="-353" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="423" key="GridCell.Tab.0.center/-2560.-353.2560.1440/0.0.1280.800/-5120.-353.2560.1440@-2560.-353.2560.1440" timestamp="1617708137364" />
+    <state width="2518" height="423" key="GridCell.Tab.0.left" timestamp="1617708137362">
+      <screen x="-2560" y="-353" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="423" key="GridCell.Tab.0.left/-2560.-353.2560.1440/0.0.1280.800/-5120.-353.2560.1440@-2560.-353.2560.1440" timestamp="1617708137362" />
+    <state width="2518" height="423" key="GridCell.Tab.0.right" timestamp="1617708137366">
+      <screen x="-2560" y="-353" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="423" key="GridCell.Tab.0.right/-2560.-353.2560.1440/0.0.1280.800/-5120.-353.2560.1440@-2560.-353.2560.1440" timestamp="1617708137366" />
+  </component>
+</project>
