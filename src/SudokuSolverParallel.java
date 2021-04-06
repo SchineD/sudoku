@@ -12,7 +12,7 @@ public class SudokuSolverParallel {
     public final static int BOARD_SIZE = 9;
     private static final int START_INDEX = 0;
 
-    private final static BigInteger TRESHOLD = new BigDecimal("1E25").toBigInteger();
+    private final static BigInteger TRESHOLD = new BigDecimal("1E35").toBigInteger();
 
     public static final ForkJoinPool pool = new ForkJoinPool();
 
@@ -52,7 +52,7 @@ public class SudokuSolverParallel {
     }
 
     public int parallelSolve() {
-        return pool.invoke(new SolverTask(this));
+        return pool.invoke(new ParallelTask(this));
     }
 
     private boolean isValid(int row, int col, int val) {
@@ -93,7 +93,7 @@ public class SudokuSolverParallel {
     }
 
     public BigInteger getSearchSpace() {
-        BigInteger solSpace = BigInteger.valueOf(1);
+        BigInteger possibleValuesLeftToCompute = BigInteger.valueOf(1);
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (getCell(row, col) == 0) {
@@ -102,24 +102,24 @@ public class SudokuSolverParallel {
                         if (isValid(row, col, num))
                             candidates++;
                     }
-                    solSpace = solSpace.multiply(BigInteger.valueOf(candidates));
+                    possibleValuesLeftToCompute = possibleValuesLeftToCompute.multiply(BigInteger.valueOf(candidates));
                 }
             }
         }
-        return solSpace;
+        return possibleValuesLeftToCompute;
     }
 
-    private class SolverTask extends RecursiveTask<Integer> {
+    private class ParallelTask extends RecursiveTask<Integer> {
         private SudokuSolverParallel board;
         private int row, col;
 
-        public SolverTask(int row, int col, SudokuSolverParallel board) {
+        public ParallelTask(int row, int col, SudokuSolverParallel board) {
             this.board = board;
             this.col = col;
             this.row = row;
         }
 
-        public SolverTask(SudokuSolverParallel board) {
+        public ParallelTask(SudokuSolverParallel board) {
             this(0, 0, board);
         }
 
@@ -139,17 +139,17 @@ public class SudokuSolverParallel {
                 return 1;
 
             if (!board.isEmpty(row, col)) {
-                SolverTask task = row < BOARD_SIZE - 1 ? new SolverTask(row + 1, col, new SudokuSolverParallel(board.board)) : new SolverTask(0, col + 1, new SudokuSolverParallel(board.board));
+                ParallelTask task = row < BOARD_SIZE - 1 ? new ParallelTask(row + 1, col, new SudokuSolverParallel(board.board)) : new ParallelTask(0, col + 1, new SudokuSolverParallel(board.board));
 
                 return task.compute();
             }
 
             // try all possible numbers
-            List<SolverTask> tasks = new ArrayList<>();
+            List<ParallelTask> tasks = new ArrayList<>();
             for (int num = 1; num <= BOARD_SIZE; num++) {
                 if (board.isValid(row, col, num)) {
                     board.setCell(row, col, num);
-                    tasks.add(row < BOARD_SIZE - 1 ? new SolverTask(row + 1, col, new SudokuSolverParallel(board)) : new SolverTask(0, col + 1, new SudokuSolverParallel(board)));
+                    tasks.add(row < BOARD_SIZE - 1 ? new ParallelTask(row + 1, col, new SudokuSolverParallel(board)) : new ParallelTask(0, col + 1, new SudokuSolverParallel(board)));
                     board.setCell(row, col, 0);
                 }
             }
@@ -157,15 +157,15 @@ public class SudokuSolverParallel {
 
             int res = 0;
 
-            SolverTask endresultTask = tasks.get(tasks.size() - 1);
+            ParallelTask endresultTask = tasks.get(tasks.size() - 1);
             tasks.remove(tasks.size() - 1);
 
-            for (SolverTask task : tasks)
+            for (ParallelTask task : tasks)
                 task.fork();
 
             res += endresultTask.compute();
 
-            for (SolverTask task : tasks)
+            for (ParallelTask task : tasks)
                 res += task.join();
 
             return res;
