@@ -8,14 +8,15 @@ import java.util.concurrent.RecursiveTask;
 
 
 public class SudokuSolverParallel {
+
     public final static int BOARD_SIZE = 9;
-    /** Sequential cutoff for the fork-join parallel solve */
+
     private final static BigInteger CUTOFF_SEARCHSPACE = new BigDecimal("1E25").toBigInteger();
-    /** Fork join pool for the parallel solve */
+
     public static final ForkJoinPool pool = new ForkJoinPool();
-    /** Number of fixed cells in this sudoku */
+
     private int fixed;
-    /** The sudoku board */
+
     private int[][] board;
 
     public SudokuSolverParallel(int[][] board) {
@@ -33,21 +34,17 @@ public class SudokuSolverParallel {
     }
 
     private int solve(int row, int col) {
-        //base case, solution found!
+
         if (col == BOARD_SIZE) {
 
             // Board.printBoard(board);
             return 1;
         }
 
-        // if the current cell is not empty (is a fixed cell) do not change it
         if (!isEmpty(row, col))
             return row < BOARD_SIZE - 1 ? solve(row + 1, col) : solve(0, col + 1);
 
-        //the result
         int res = 0;
-        // try all the possible numbers. If the number selected is valid increase
-        // the cell and proceed with the recursion
         for (int num = 1; num <= BOARD_SIZE; num++) {
             if (isValid(row, col, num)) {
                 setCell(row, col, num);
@@ -58,27 +55,10 @@ public class SudokuSolverParallel {
         return res;
     }
 
-    /**
-     * Solves the sudoku using a backtracking algorithm executed in parallel
-     * with the fork join framework.
-     *
-     * @return the number of solutions
-     */
     public int parallelSolve() {
         return pool.invoke(new SolverTask(this));
     }
 
-    /**
-     * Checks if a number can be placed in a cell without breaking the rules of
-     * sudoku. Used in the backtracking algorithm in order to reduce the search
-     * space.
-     *
-     *
-     * @param val the value to be checked
-     * @param row cell row
-     * @param col cell column
-     * @return true if the value can be placed without breaking the rules of sudoku, false otherwise
-     */
     private boolean isValid(int row, int col, int val) {
         // check for equals numbers on the column and the row
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -86,12 +66,11 @@ public class SudokuSolverParallel {
                 return false;
         }
 
-        // find the section coordinates
+
         int rowSec = (row / 3) * 3;
         int colSec = (col / 3) * 3;
 
-        // compute the remaining cells to check and check if in one of
-        // them there is a number equal to num
+
         int row1 = (row + 2) % 3;
         int row2 = (row + 4) % 3;
         int col1 = (col + 2) % 3;
