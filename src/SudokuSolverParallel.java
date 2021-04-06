@@ -12,26 +12,21 @@ public class SudokuSolverParallel {
     public final static int BOARD_SIZE = 9;
     private static final int START_INDEX = 0;
 
-    private final static BigInteger CUTOFF_SEARCHSPACE = new BigDecimal("1E25").toBigInteger();
+    private final static BigInteger TRESHOLD = new BigDecimal("1E25").toBigInteger();
 
     public static final ForkJoinPool pool = new ForkJoinPool();
-
-    private int fixed;
 
     private int[][] board;
 
     public SudokuSolverParallel(int[][] board) {
 
         this.board = board;
-        computeFixed();
     }
 
-    /** Creates a deep copy of another {@link SudokuSolverParallel} */
     public SudokuSolverParallel(SudokuSolverParallel o) {
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < BOARD_SIZE; i++)
             board[i] = Arrays.copyOf(o.board[i], o.board[i].length);
-        fixed = o.fixed;
     }
 
     private int solve(int row, int col) {
@@ -90,26 +85,13 @@ public class SudokuSolverParallel {
     }
     
     public void setCell(int row, int col, int val) {
-        if (!isEmpty(row, col) && val == 0)
-            fixed--;
-        else if (isEmpty(row, col) && val != 0)
-            fixed++;
         board[row][col] = val;
     }
     
     public boolean isEmpty(int row, int col) {
         return getCell(row, col) == 0;
     }
-    
-    private void computeFixed() {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (getCell(row, col) != 0)
-                    fixed++;
-            }
-        }
-    }
-    
+
     public BigInteger getSearchSpace() {
         BigInteger solSpace = BigInteger.valueOf(1);
         for (int row = 0; row < BOARD_SIZE; row++) {
@@ -127,20 +109,7 @@ public class SudokuSolverParallel {
         return solSpace;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 9; x++)
-                sb.append(getCell(x, y) + " ");
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
-
-
     private class SolverTask extends RecursiveTask<Integer> {
-        private static final long serialVersionUID = 7541995084434430895L;
         private SudokuSolverParallel board;
         private int row, col;
 
@@ -157,7 +126,7 @@ public class SudokuSolverParallel {
         @Override
         protected Integer compute() {
             // if the search space is smaller than the cutoff, solve sequentially
-            if (board.getSearchSpace().compareTo(CUTOFF_SEARCHSPACE) < 0)
+            if (board.getSearchSpace().compareTo(TRESHOLD) < 0)
                 return board.solve(row, col);
             else
                 return parallelSolve();
@@ -186,18 +155,16 @@ public class SudokuSolverParallel {
             }
             board = null;
 
-            // the result of this thread
             int res = 0;
-            // execute in parallel all the actions in the queue. The last action in the queue does not fork but get executed in this thread.
-            SolverTask continuation = tasks.get(tasks.size() - 1);
+
+            SolverTask endresultTask = tasks.get(tasks.size() - 1);
             tasks.remove(tasks.size() - 1);
 
             for (SolverTask task : tasks)
                 task.fork();
 
-            res += continuation.compute();
+            res += endresultTask.compute();
 
-            // wait for the forked tasks to finish
             for (SolverTask task : tasks)
                 res += task.join();
 
