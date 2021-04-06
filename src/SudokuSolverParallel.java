@@ -9,10 +9,9 @@ import java.util.concurrent.RecursiveTask;
 
 public class SudokuSolverParallel {
 
-    public final static int BOARD_SIZE = 9;
+    public static final int BOARD_SIZE = 9;
     private static final int START_INDEX = 0;
-
-    private final static BigInteger TRESHOLD = new BigDecimal("1E35").toBigInteger();
+    private static final BigInteger TRESHOLD = new BigDecimal("1E40").toBigInteger();
 
     public static final ForkJoinPool pool = new ForkJoinPool();
 
@@ -23,20 +22,19 @@ public class SudokuSolverParallel {
         this.board = board;
     }
 
-    public SudokuSolverParallel(SudokuSolverParallel o) {
+    public SudokuSolverParallel(SudokuSolverParallel solver) {
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < BOARD_SIZE; i++)
-            board[i] = Arrays.copyOf(o.board[i], o.board[i].length);
+            board[i] = Arrays.copyOf(solver.board[i], solver.board[i].length);
     }
 
     private int solve(int row, int col) {
-
+        // done!
         if (col == BOARD_SIZE) {
-
             printBoard(board);
             return 1;
         }
-
+        // fixed cell, move on!
         if (!isEmpty(row, col))
             return row < BOARD_SIZE - 1 ? solve(row + 1, col) : solve(0, col + 1);
 
@@ -55,27 +53,25 @@ public class SudokuSolverParallel {
         return pool.invoke(new ParallelTask(this));
     }
 
-    private boolean isValid(int row, int col, int val) {
+    private boolean isValid(int row, int col, int value) {
         // check for equals numbers on the column and the row
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (getCell(row, i) == val || getCell(i, col) == val)
+            if (getCell(row, i) == value || getCell(i, col) == value)
                 return false;
         }
 
-
         int rowSec = (row / 3) * 3;
         int colSec = (col / 3) * 3;
-
 
         int row1 = (row + 2) % 3;
         int row2 = (row + 4) % 3;
         int col1 = (col + 2) % 3;
         int col2 = (col + 4) % 3;
 
-        if (getCell(row1 + rowSec, col1 + colSec) == val) return false;
-        if (getCell(row2 + rowSec, col1 + colSec) == val) return false;
-        if (getCell(row1 + rowSec, col2 + colSec) == val) return false;
-        if (getCell(row2 + rowSec, col2 + colSec) == val) return false;
+        if (getCell(row1 + rowSec, col1 + colSec) == value) return false;
+        if (getCell(row2 + rowSec, col1 + colSec) == value) return false;
+        if (getCell(row1 + rowSec, col2 + colSec) == value) return false;
+        if (getCell(row2 + rowSec, col2 + colSec) == value) return false;
 
         return true;
     }
@@ -84,8 +80,8 @@ public class SudokuSolverParallel {
         return board[row][col];
     }
     
-    public void setCell(int row, int col, int val) {
-        board[row][col] = val;
+    public void setCell(int row, int col, int value) {
+        board[row][col] = value;
     }
     
     public boolean isEmpty(int row, int col) {
